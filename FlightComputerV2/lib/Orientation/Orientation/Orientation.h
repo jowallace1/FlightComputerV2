@@ -5,9 +5,9 @@
 
 struct EulerAngles
 {
-    float yaw;
-    float pitch;
-    float roll;
+    double yaw;
+    double pitch;
+    double roll;
 };
 
 class Orientation

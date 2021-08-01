@@ -13,6 +13,8 @@ public:
 
     Pair evaluate(Pair current, double dt);
 
+    inline void setSetPoint(Pair newSetPoint) { setPoint = newSetPoint; }
+
 private:
     Pair setPoint;
     Error error;

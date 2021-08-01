@@ -23,6 +23,7 @@ struct Pair
         Pair temp;
         temp.yaw = yaw * d;
         temp.pitch = pitch * d;
+        return temp;
     }
 
     Pair operator/(const double &d)
