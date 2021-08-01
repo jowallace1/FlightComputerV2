@@ -8,7 +8,7 @@ public:
     Actuator();
 
     inline void writeAngle(double angle) { servo.writeMicroseconds(map(angle, 0, 180, 400, 2400)); }
-    inline double readAngle() { servo.readMicroseconds(); }
+    inline double readAngle() { return servo.readMicroseconds(); }
 
     inline void attach() { servo.attach(pin); }
     inline void detach() { servo.detach(); }
