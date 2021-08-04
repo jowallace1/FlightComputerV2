@@ -1,21 +1,49 @@
 #include "Telemetry.h"
+#include "Orientation/Orientation.h"
+
+Telemetry::Telemetry(double alpha, Adafruit_BNO055 &bno, Adafruit_BMP280 &bmp)
+    : alpha(alpha), bno(&bno), bmp(&bmp)
+{
+}
 
 String Telemetry::toString()
 {
     String temp;
 
-    temp += String(data.orientation.orientation.a) + ", " + String(data.orientation.orientation.b) + ", " + String(data.orientation.orientation.c) + ", " + String(data.orientation.orientation.d) + ", ";
-    temp += String(data.gyro.yaw) + ", " + String(data.gyro.pitch) + ", " + String(data.gyro.roll) + ", ";
-    temp += String(data.orientation_e.yaw) + ", " + String(data.orientation_e.pitch) + ", " + String(data.orientation_e.roll) + ", ";
-    temp += String(data.altitude) + ", ";
-    temp += String(data.yVelo) + ", ";
-    temp += String(data.state) + ", ";
-    temp += String(data.fairingState) + ", ";
-    temp += String(data.mountState.yaw) + ", " + String(data.mountState.pitch);
+    temp += String(myData.orientation.orientation.a) + ", " + String(myData.orientation.orientation.b) + ", " + String(myData.orientation.orientation.c) + ", " + String(myData.orientation.orientation.d) + ", ";
+    temp += String(myData.imu.gyro.x) + ", " + String(myData.imu.gyro.y) + ", " + String(myData.imu.gyro.z) + ", ";
+    temp += String(myData.orientation_e.yaw) + ", " + String(myData.orientation_e.pitch) + ", " + String(myData.orientation_e.roll) + ", ";
+    temp += String(myData.altitude) + ", ";
+    temp += String(myData.yVelo) + ", ";
+    temp += String(myData.state) + ", ";
+    temp += String(myData.fairingState) + ", ";
+    temp += String(myData.mountState.yaw) + ", " + String(myData.mountState.pitch);
+
+    return temp;
+}
+
+void Telemetry::clock()
+{
+    myData.thisMicros = micros();
+    myData.dt = myData.thisMicros - myData.lastMicros / 1000000;
+    myData.lastMicros = myData.thisMicros;
 }
 
 void Telemetry::oriEvent()
 {
+    EulerAngles lastGyro = myData.gyro_f;
+
+    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_GYROSCOPE);
+    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_MAGNETOMETER);
+    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_EULER);
+
+    EulerAngles gyro(myData.imu.gyro.z, myData.imu.gyro.y, myData.imu.gyro.x); //MAKE SURE THESE ARE ASSIGNED CORRECTLY
+    myData.gyro_f = filter(gyro * DEG_TO_RAD, lastGyro, alpha);
+
+    myData.orientation.update(myData.gyro_f, myData.dt);
+    myData.orientation_e = myData.orientation.toEuler();
+    myData.pos = myData.orientation.orientation.rotate(Quaternion(0, 0, 1));
 }
 
 void Telemetry::baroEvent()

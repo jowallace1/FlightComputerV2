@@ -2,13 +2,7 @@
 #define ORIENTATION_H
 
 #include "Quaternion/Quaternion.h"
-
-struct EulerAngles
-{
-    double yaw;
-    double pitch;
-    double roll;
-};
+#include "EulerAngles/EulerAngles.h"
 
 class Orientation
 {

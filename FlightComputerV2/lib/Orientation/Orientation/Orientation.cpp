@@ -4,6 +4,11 @@
 
 Quaternion expectedGravity(1, 0, 0);
 
+EulerAngles::EulerAngles(double yaw, double pitch, double roll)
+    : yaw(yaw), pitch(pitch), roll(roll)
+{
+}
+
 EulerAngles Orientation::quaternionToEuler(Quaternion q)
 {
     EulerAngles ret;
