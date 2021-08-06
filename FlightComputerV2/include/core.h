@@ -1,3 +1,5 @@
+#pragma once
+
 #include "EulerAngles/EulerAngles.h"
 
 struct Pair

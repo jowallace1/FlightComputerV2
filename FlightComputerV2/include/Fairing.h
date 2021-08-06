@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Actuator.h"
 
 class Fairing

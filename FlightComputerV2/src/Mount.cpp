@@ -21,3 +21,13 @@ void Mount::detach()
     yawServo.detach();
     pitchServo.detach();
 }
+
+Pair Mount::getState()
+{
+    Pair temp;
+
+    temp.yaw = yawServo.readAngle();
+    temp.pitch = pitchServo.readAngle();
+
+    return temp;
+}

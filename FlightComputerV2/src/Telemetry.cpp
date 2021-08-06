@@ -1,8 +1,8 @@
 #include "Telemetry.h"
 #include "Orientation/Orientation.h"
 
-Telemetry::Telemetry(double alpha, Adafruit_BNO055 &bno, Adafruit_BMP280 &bmp)
-    : alpha(alpha), bno(&bno), bmp(&bmp)
+Telemetry::Telemetry(double alpha, Adafruit_BNO055 &bno, Adafruit_BMP280 &bmp, StateMachine &sm, Fairing &fairing, Mount &mount)
+    : alpha(alpha), state_machine(&sm), bno(&bno), bmp(&bmp), fairing(&fairing), mount(&mount)
 {
 }
 
@@ -48,8 +48,20 @@ void Telemetry::oriEvent()
 
 void Telemetry::baroEvent()
 {
+    double lastAltitude = myData.altitude;
+    double lastVelo = myData.yVelo;
+
+    myData.altitude = bmp->readAltitude(myData.initPressure);
+    myData.temperature = bmp->readTemperature();
+    myData.pressure = bmp->readPressure();
+
+    myData.yVelo = (myData.altitude - lastAltitude) / myData.dt;
+    myData.yAccel = (myData.yVelo - lastVelo) / myData.dt;
 }
 
 void Telemetry::sysEvent()
 {
+    myData.state = state_machine->getState();
+    myData.fairingState = fairing->getState();
+    myData.mountState = mount->getState();
 }
