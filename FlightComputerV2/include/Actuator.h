@@ -9,7 +9,7 @@ public:
     Actuator(unsigned int off, unsigned int pin);
     Actuator();
 
-    inline void writeAngle(double angle) { servo.writeMicroseconds(map(angle, 0, 180, 400, 2400)); }
+    inline void writeAngle(double angle) { servo.writeMicroseconds(map(angle + offset, 0, 180, 400, 2400)); }
     inline double readAngle() { return servo.readMicroseconds(); }
 
     inline void attach() { servo.attach(pin); }
