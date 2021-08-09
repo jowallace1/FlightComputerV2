@@ -6,18 +6,31 @@
 class Actuator
 {
 public:
-    Actuator(unsigned int off, unsigned int pin);
+    Actuator(double off, double min, double max, double ratio, unsigned int pin);
+    Actuator(double min, double max, unsigned int pin);
+    Actuator(double off, unsigned int pin);
+    Actuator(unsigned int pin);
     Actuator();
 
-    inline void writeAngle(double angle) { servo.writeMicroseconds(map(angle + offset, 0, 180, 400, 2400)); }
-    inline double readAngle() { return servo.readMicroseconds(); }
+    inline void writeServo(double const angle) { servo.writeMicroseconds(map(angle + offset, 0, 180, 400, 2400)); } // THIS FUNCTION HAS NO LIMIT PROTECTION
+    void writeAngle(double const angle);                                                                            // THIS FUNCTION HAS LIMIT PROTECTION
+
+    inline double readServo() { return servo.readMicroseconds(); }
+    inline double readAngle() { return myAngle; }
 
     inline void attach() { servo.attach(pin); }
     inline void detach() { servo.detach(); }
 
+    inline void setOffset(unsigned int angle) { offset = angle; }
+
 private:
-    unsigned int offset = 0;
     unsigned int pin;
+    double offset = 0;
+    double ratio = 1;
+    double myAngle;
+
+    double min = 0;
+    double max = 180;
 
     Servo servo;
 
