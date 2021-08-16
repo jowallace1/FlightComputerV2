@@ -5,30 +5,61 @@
 #include "core.h"
 #include "Actuator.h"
 #include "StateMachine.h"
+#include "Flash.h"
+//#include "SPIFlash.h"
+
+#define CHIPSIZE MB32
 
 double lim = 6.85;
 
 StateMachine controller(0, 0);
+
+//SPIFlash chip(flashCS);
+Flash chip(flashCS);
+
 Actuator yawActuator(90, -lim, lim, 3.13, yawServoPin);
 Actuator pitchActuator(90, -lim, lim, 1.21, pitchServoPin);
 
 ClickButton controlButton(buttonPin, true);
 
+struct vec2
+{
+    float x, y;
+};
+
+vec2 test;
+vec2 out;
+
 void setup()
 {
+    Serial.begin(115200);
+    chip.begin();
+    Serial.println("Chip initialized.");
+    //chip.eraseChip();
+    chip.erase();
+    Serial.println("Chip erased.");
+
     yawActuator.attach();
     pitchActuator.attach();
 
-    Serial.begin(115200);
     // put your setup code here, to run once:
+
+    test.x = 12.52;
+    test.y = 11.29;
+
+    chip.writeAnything(0, test);
+    chip.readAnything(0, out);
 }
 
 void loop()
 {
-    controller.run();
+    //controller.run();
+    Serial.print("Test values: ");
+    Serial.print(out.x);
+    Serial.print(',');
+    Serial.println(out.y);
 
-    // yawActuator.writeAngle(0);
-    // pitchActuator.writeAngle(0);
+    delay(200);
 }
 
 void StateMachine::states()
@@ -41,16 +72,6 @@ void StateMachine::states()
     }
     case 1:
     {
-        for (unsigned int i = 0; i < 360; i++)
-        {
-            double yawAngle = lim * cos(i * DEG_TO_RAD);
-            double pitchAngle = lim * sin(i * DEG_TO_RAD);
-
-            yawActuator.writeAngle(yawAngle);
-            pitchActuator.writeAngle(pitchAngle);
-
-            delay(10);
-        }
         break;
     }
     }

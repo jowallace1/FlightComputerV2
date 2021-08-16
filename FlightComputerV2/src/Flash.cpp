@@ -5,3 +5,8 @@ Flash::Flash(unsigned int pin)
 {
     chip = new SPIFlash(pin);
 }
+
+Flash::~Flash()
+{
+    delete chip;
+}
