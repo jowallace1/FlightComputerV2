@@ -2,47 +2,48 @@
 #include <vector>
 
 #include "ClickButton.h"
+#include "Adafruit_BNO055.h"
+#include "Adafruit_BMP280.h"
 
 #include "core.h"
 #include "Actuator.h"
+#include "Fairing.h"
+#include "Mount.h"
 #include "StateMachine.h"
 #include "Flash.h"
+#include "Telemetry.h"
 
 #define CHIPSIZE MB32
 
 double lim = 6.85;
 
-StateMachine controller(0, 0);
-
-//SPIFlash chip(flashCS);
+// integrated devices
 Flash chip(flashCS);
+Adafruit_BNO055 bno = Adafruit_BNO055(-1, 0x28);
+Adafruit_BMP280 bmp;
 
-std::vector<int> out;
+// mechanical devices
+Fairing fairing(0, 90, fairingServoPin);
+Mount mount(3.13, 90, yawServoPin, 1.21, 90, pitchServoPin);
+
+// virtual devices
+StateMachine controller(0, 0);
+Telemetry telem(0.9, bno, bmp, controller, fairing, mount);
 
 void setup()
 {
     Serial.begin(115200);
     chip.begin();
-    Serial.println("Chip initialized.");
-    chip.erase();
-    Serial.println("Chip erased.");
+    bno.begin();
+    bno.setExtCrystalUse(1);
 
-    chip.writeAnything(1);
-    chip.writeAnything(2);
-    chip.writeAnything(3);
-
-    chip.readArray(out);
+    Serial.println("Device initialized.");
 }
 
 void loop()
 {
-    //controller.run();
-    Serial.print("Test values: ");
-    Serial.print(out[0]);
-    Serial.print(',');
-    Serial.print(out[1]);
-    Serial.print(',');
-    Serial.println(out[2]);
+    telem.clock();
+    telem.oriEvent();
 
-    delay(200);
+    delay(10);
 }

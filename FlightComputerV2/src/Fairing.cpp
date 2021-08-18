@@ -1,4 +1,5 @@
 #include "Fairing.h"
+#include "Actuator.h"
 
 Fairing::Fairing(unsigned int open, unsigned int closed, unsigned int pin)
     : openPos(open), closedPos(closed)
