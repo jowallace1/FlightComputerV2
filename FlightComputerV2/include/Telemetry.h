@@ -13,7 +13,7 @@
 
 struct data
 {
-    sensors_event_t imu;
+    sensors_event_t gyro, accel, mag, euler;
     Orientation orientation;
     EulerAngles gyro_f, orientation_e;
     Quaternion pos;

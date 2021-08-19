@@ -43,7 +43,7 @@ struct Pair
 };
 
 inline double map(double x, double in_min, double in_max, double out_min, double out_max) { return (double)(x - in_min) * (out_max - out_min) / (double)(in_max - in_min) + out_min; }
-inline EulerAngles filter(EulerAngles current, EulerAngles last, double alpha) { return current * alpha + current * (1 - alpha); }
+inline EulerAngles filter(EulerAngles current, EulerAngles last, double alpha) { return last * alpha + current * (1 - alpha); }
 
 //UI pins
 const int rLedPin = 10;

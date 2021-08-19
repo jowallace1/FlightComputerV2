@@ -12,7 +12,7 @@ String Telemetry::toString()
     String temp;
 
     temp += String(myData.orientation.orientation.a) + ", " + String(myData.orientation.orientation.b) + ", " + String(myData.orientation.orientation.c) + ", " + String(myData.orientation.orientation.d) + ", ";
-    temp += String(myData.imu.gyro.x) + ", " + String(myData.imu.gyro.y) + ", " + String(myData.imu.gyro.z) + ", ";
+    temp += String(myData.gyro.gyro.x) + ", " + String(myData.gyro.gyro.y) + ", " + String(myData.gyro.gyro.z) + ", ";
     temp += String(myData.orientation_e.yaw) + ", " + String(myData.orientation_e.pitch) + ", " + String(myData.orientation_e.roll) + ", ";
     temp += String(myData.altitude) + ", ";
     temp += String(myData.yVelo) + ", ";
@@ -26,7 +26,7 @@ String Telemetry::toString()
 void Telemetry::clock()
 {
     myData.thisMicros = micros();
-    myData.dt = myData.thisMicros - myData.lastMicros / 1000000;
+    myData.dt = double(myData.thisMicros - myData.lastMicros) / 1000000;
     myData.lastMicros = myData.thisMicros;
 }
 
@@ -34,12 +34,12 @@ void Telemetry::oriEvent()
 {
     EulerAngles lastGyro = myData.gyro_f;
 
-    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_GYROSCOPE);
-    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_ACCELEROMETER);
-    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_MAGNETOMETER);
-    bno->getEvent(&myData.imu, Adafruit_BNO055::VECTOR_EULER);
+    bno->getEvent(&myData.gyro, Adafruit_BNO055::VECTOR_GYROSCOPE);
+    bno->getEvent(&myData.accel, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+    bno->getEvent(&myData.mag, Adafruit_BNO055::VECTOR_MAGNETOMETER);
+    bno->getEvent(&myData.euler, Adafruit_BNO055::VECTOR_EULER);
 
-    EulerAngles gyro(myData.imu.gyro.z, myData.imu.gyro.y, myData.imu.gyro.x); //MAKE SURE THESE ARE ASSIGNED CORRECTLY
+    EulerAngles gyro(myData.gyro.gyro.z, myData.gyro.gyro.y, myData.gyro.gyro.x); //MAKE SURE THESE ARE ASSIGNED CORRECTLY
     myData.gyro_f = filter(gyro * DEG_TO_RAD, lastGyro, alpha);
 
     myData.orientation.update(myData.gyro_f, myData.dt);

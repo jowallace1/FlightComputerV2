@@ -30,6 +30,9 @@ Mount mount(3.13, 90, yawServoPin, 1.21, 90, pitchServoPin);
 StateMachine controller(0, 0);
 Telemetry telem(0.9, bno, bmp, controller, fairing, mount);
 
+// data structs
+data myData;
+
 void setup()
 {
     Serial.begin(115200);
@@ -38,12 +41,23 @@ void setup()
     bno.setExtCrystalUse(1);
 
     Serial.println("Device initialized.");
+    myData.lastMicros = micros();
 }
 
 void loop()
 {
+    bno.getEvent(&myData.gyro, Adafruit_BNO055::VECTOR_GYROSCOPE);
+
     telem.clock();
     telem.oriEvent();
+
+    myData = telem.getData();
+
+    Serial.print(myData.orientation_e.yaw);
+    Serial.print(",");
+    Serial.print(myData.orientation_e.pitch);
+    Serial.print(",");
+    Serial.println(myData.orientation_e.roll);
 
     delay(10);
 }
