@@ -1,5 +1,6 @@
 #include "Telemetry.h"
-#include "Orientation/Orientation.h"
+#include "EulerAngles.h"
+#include "Orientation.h"
 
 Telemetry::Telemetry(double alpha, Adafruit_BNO055 &bno, Adafruit_BMP280 &bmp, StateMachine &sm, Fairing &fairing, Mount &mount)
     : alpha(alpha), state_machine(&sm), bno(&bno), bmp(&bmp), fairing(&fairing), mount(&mount)

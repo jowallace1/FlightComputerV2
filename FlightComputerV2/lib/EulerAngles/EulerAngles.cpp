@@ -1,5 +1,10 @@
 #include "EulerAngles.h"
 
+EulerAngles::EulerAngles(double yaw, double pitch, double roll)
+    : yaw(yaw), pitch(pitch), roll(roll)
+{
+}
+
 EulerAngles EulerAngles::operator*(const double &v)
 {
     EulerAngles temp;
@@ -28,11 +33,6 @@ EulerAngles EulerAngles::operator+(const double &v)
 EulerAngles EulerAngles::operator-(const double &v)
 {
     return *this + -v;
-}
-
-EulerAngles EulerAngles::operator*=(const double &v)
-{
-    return *this * v;
 }
 
 EulerAngles EulerAngles::operator+(const EulerAngles &v)

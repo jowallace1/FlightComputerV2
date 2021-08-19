@@ -4,7 +4,8 @@
 #include <Adafruit_BNO055.h>
 #include <Adafruit_BMP280.h>
 
-#include "Orientation/Orientation.h"
+#include "EulerAngles.h"
+#include "Orientation.h"
 #include "StateMachine.h"
 #include "Fairing.h"
 #include "Mount.h"

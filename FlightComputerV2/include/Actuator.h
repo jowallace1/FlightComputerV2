@@ -10,7 +10,7 @@ public:
     Actuator(double min, double max, unsigned int pin);
     Actuator(double off, unsigned int pin);
     Actuator(unsigned int pin);
-    Actuator();
+    inline Actuator(){};
 
     inline void writeServo(double const angle) { servo.writeMicroseconds(map(angle + offset, 0, 180, 400, 2400)); } // THIS FUNCTION HAS NO LIMIT PROTECTION
     void writeAngle(double const angle);                                                                            // THIS FUNCTION HAS LIMIT PROTECTION

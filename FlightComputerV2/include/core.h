@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <math.h>
 
-#include "EulerAngles/EulerAngles.h"
+#include "EulerAngles.h"
 
 struct Pair
 {

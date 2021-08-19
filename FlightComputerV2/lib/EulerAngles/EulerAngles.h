@@ -6,7 +6,7 @@ struct EulerAngles
     double pitch;
     double roll;
 
-    EulerAngles();
+    inline EulerAngles(){};
     EulerAngles(double yaw, double pitch, double roll);
 
     EulerAngles operator*(const double &v);
